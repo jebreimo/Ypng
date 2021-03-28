@@ -33,7 +33,7 @@ namespace Ypng
 
     bool PngTransform::pixelPacking() const
     {
-        return false;
+        return m_PixelPacking;
     }
 
     PngTransform& PngTransform::pixelPacking(bool value)
