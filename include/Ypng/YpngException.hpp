@@ -14,9 +14,7 @@ namespace Ypng
     class YpngException : public std::runtime_error
     {
     public:
-        explicit YpngException(const std::string& message) noexcept
-            : std::runtime_error(message)
-        {}
+        using std::runtime_error::runtime_error;
     };
 }
 

@@ -43,8 +43,8 @@ namespace Ypng
 
         PngInfo m_Info;
         PngTransform m_Transform;
-        png_structp m_PngPtr;
-        png_infop m_InfoPtr;
+        png_structp m_PngPtr = nullptr;
+        png_infop m_InfoPtr = nullptr;
     };
 
     void writePng(std::ostream& stream,

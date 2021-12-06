@@ -61,7 +61,8 @@ namespace Ypng
                              png_size_t length)
         {
             auto stream = static_cast<std::ostream*>(png_get_io_ptr(png_ptr));
-            stream->write(reinterpret_cast<const char*>(data), length);
+            stream->write(reinterpret_cast<const char*>(data),
+                          std::streamsize(length));
         }
 
         void user_flush_data(png_structp png_ptr)
@@ -90,7 +91,7 @@ namespace Ypng
 
     PngWriter::PngWriter(PngWriter&& obj) noexcept
         : m_Info(std::move(obj.m_Info)),
-          m_Transform(std::move(obj.m_Transform)),
+          m_Transform(obj.m_Transform),
           m_PngPtr(nullptr),
           m_InfoPtr(nullptr)
     {
@@ -111,8 +112,8 @@ namespace Ypng
     {
         if (m_PngPtr)
             png_destroy_write_struct(&m_PngPtr, &m_InfoPtr);
-        m_Info = std::move(m_Info);
-        m_Transform = std::move(m_Transform);
+        m_Info = std::move(obj.m_Info);
+        m_Transform = obj.m_Transform;
         std::swap(m_PngPtr, obj.m_PngPtr);
         std::swap(m_InfoPtr, obj.m_InfoPtr);
         return *this;
@@ -142,7 +143,7 @@ namespace Ypng
         if (!m_Info.texts().empty())
         {
             png_set_text(m_PngPtr, m_InfoPtr,
-                         m_Info.texts().data(), m_Info.texts().size());
+                         m_Info.texts().data(), int(m_Info.texts().size()));
         }
 
         if (m_Transform.invertAlpha())
@@ -228,7 +229,7 @@ namespace Ypng
                   const void* image, size_t imageSize,
                   PngInfo options, PngTransform transform)
     {
-        PngWriter writer(stream, std::move(options), std::move(transform));
+        PngWriter writer(stream, std::move(options), transform);
         writer.writeInfo();
         writer.write(image, imageSize);
         writer.writeEnd();
@@ -243,6 +244,6 @@ namespace Ypng
             YPNG_THROW("Can not create " + fileName);
         writePng(stream, image, imageSize,
                  std::move(options),
-                 std::move(transform));
+                 transform);
     }
 }

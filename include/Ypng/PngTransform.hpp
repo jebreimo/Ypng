@@ -29,7 +29,7 @@ namespace Ypng
 
         PngTransform& pixelPacking(bool value);
     private:
-        std::optional <uint32_t> m_PixelFiller;
+        std::optional<uint32_t> m_PixelFiller;
         bool m_InvertAlpha = false;
         bool m_PixelPacking = false;
     };
